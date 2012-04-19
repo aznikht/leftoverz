@@ -1,0 +1,14 @@
+<!-- Account Creation View -->
+<h1>Create Account</h1>
+<div id="createForm">
+<form name="createform" action="/creating" method="POST" accept-charset="utf-8" onsubmit="return validateCreate()">
+	<p>Username: <input type="text" name="username"></p>
+	<p>Password: <input type="password" name="passwordOne"></p>
+	<p>Retype Password: <input type="password" name="passwordTwo"></p>
+	<p><input type="submit" value="Create Account"> <a href="/">Go Back to Login</a> </p>
+	<div id="jsError"></div>
+	<div class="Error">
+	<p><% if(err !== '') {%> ERROR: <%= err %>  <%}%> </p>
+	</div>
+</form>
+</div>

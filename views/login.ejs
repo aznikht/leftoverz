@@ -1,0 +1,16 @@
+<!-- Login View -->
+<h1><%= title %></h1>
+<div id="loginForm">
+<form name="loginform" action="/logging" method="POST" accept-charset="utf-8" onsubmit="return validateLogin()">
+	<p>Username: <input type="text/submit/hidden/button" name="username"></p>
+	<p>Password: <input type="password" name="password"></p>
+	<p><input type="submit" value="Login"></p>
+</form>
+<div id="jsError"></div>
+<div class="Error">
+	<p><% if(err !== '') {%> ERROR: <%= err %>  <%}%> </p>
+</div>
+</div>
+<div id="create">
+<a href="/create"> Create an account </a>
+</div>
