@@ -11,7 +11,7 @@ program.prompt('Enter Postgres Edlab Account Username: ', function (user) {
 
 function run (user) 
 {
-    connection = 'postgresql://' + user+':abc@' + host + ':' + port + '/' + user;
+    connection = 'postgresql://' + user+':Kinghei915@' + host + ':' + port + '/' + user;
     pg.connect(connection, function (err, client) {
 		if (err)
 		{
@@ -49,13 +49,13 @@ exports.create = function(req, res) {
     	res.render('create', { title: 'Create Account', err: ''} );
     }else
     {
+    	console.log("Creating users if not found");
     	pg.connect(connection, function (err, client) {
     		if (err)
                 throw err;
     		var query = client.query('SELECT * FROM users');
-    		var found;
+    		var found =false;
     		query.on('row', function(row) {
-    			found = false;
     			if(row.username == username)
     			{
     				console.log("Username already exist");
@@ -82,7 +82,6 @@ exports.login = function(req, res) {
     // TODO: user login
 	var username = req.body.username;
 	var password = req.body.password;
-	console.log(req.session);
 	if(req.session.auth === undefined )
 	{
 		if(( typeof username === "undefined")||(typeof password === "undefined"))
@@ -96,21 +95,23 @@ exports.login = function(req, res) {
 	    		if (err)
 	                throw err;
 	            console.log("Accessing DB");
-	    		var query = client.query('SELECT * FROM users WHERE username = $1', [username]);
-	    		query.on('end', function(result) {
-	    			if(result != undefined)
+	    		var query = client.query("SELECT * FROM users WHERE username = $1", [username], function(err, result){
+	    			console.log(result.rowCount);
+	    			if(err)
+	    				throw err;
+	    			else if(result != undefined)
 	    			{
-	    				if(result.row[0].password == password)
+	    				if(result.rows[0].password == password)
 	    				{
-		    				console.log("found account match");
-		    				req.session.username = username;
-		    				req.session.auth = true;
-		    				res.redirect('/home');
+			    			console.log("found account match");
+			    			req.session.username = username;
+			    			req.session.auth = true;
+			    			res.redirect('/home');
 	    				}
 	    			}else
 	    			{
-	    			console.log("Username does not exist");
-	    			res.render('login', { title: 'Login to Leftoverz Project', err: 'Incorrect Login or Password!'} );
+			    		console.log("Username does not exist");
+			    		res.render('login', { title: 'Login to Leftoverz Project', err: 'Incorrect Login or Password!'} );
 	    			}
 	    		});
 	    	});
