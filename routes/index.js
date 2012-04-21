@@ -53,22 +53,21 @@ exports.create = function(req, res) {
     	pg.connect(connection, function (err, client) {
     		if (err)
                 throw err;
-    		var query = client.query('SELECT * FROM users');
-    		var found =false;
-    		query.on('row', function(row) {
-    			if(row.username == username)
+    		var query = client.query('SELECT * FROM users WHERE username = $1', [username], function(err, result){
+    			if(err)
+    				throw err;
+    			else if(result.rows.length != 0)
     			{
     				console.log("Username already exist");
     				found = true;
     				res.render('create', { title: 'Create Account', err: 'Username already exist!'} );
+    			}else
+    			{
+    				console.log("Username created");
+    				client.query('INSERT INTO users(username, password) values($1, $2);', [username, password]);
+    				res.render('login', { title: 'Login to Leftoverz Project', err: ''});
     			}
     		});
-    		if(found == false)
-    		{
-				console.log("Username created");
-				client.query('INSERT INTO users(username, password) values($1, $2);', [username, password]);
-				res.render('login', { title: 'Login to Leftoverz Project', err: ''});
-    		}
     	});
     }
 };
@@ -96,17 +95,21 @@ exports.login = function(req, res) {
 	                throw err;
 	            console.log("Accessing DB");
 	    		var query = client.query("SELECT * FROM users WHERE username = $1", [username], function(err, result){
-	    			console.log(result.rowCount);
 	    			if(err)
 	    				throw err;
-	    			else if(result != undefined)
+	    			else if(result.rows.length != 0)
 	    			{
+	    				console.log(result);
 	    				if(result.rows[0].password == password)
 	    				{
 			    			console.log("found account match");
 			    			req.session.username = username;
 			    			req.session.auth = true;
 			    			res.redirect('/home');
+	    				}else
+	    				{
+	    					console.log("password is wrong");
+				    		res.render('login', { title: 'Login to Leftoverz Project', err: 'Incorrect Login or Password!'} );
 	    				}
 	    			}else
 	    			{
