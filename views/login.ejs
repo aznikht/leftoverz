@@ -7,6 +7,9 @@
 	<p><input type="submit" value="Login"></p>
 </form>
 <div id="jsError"></div>
+<div class="Confirm">
+	<p><% if(confirm !== '') {%> <%= confirm %>  <%}%> </p>
+</div>
 <div class="Error">
 	<p><% if(err !== '') {%> ERROR: <%= err %>  <%}%> </p>
 </div>

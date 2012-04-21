@@ -65,7 +65,7 @@ exports.create = function(req, res) {
     			{
     				console.log("Username created");
     				client.query('INSERT INTO users(username, password) values($1, $2);', [username, password]);
-    				res.render('login', { title: 'Login to Leftoverz Project', err: ''});
+    				res.render('login', { title: 'Login to Leftoverz Project', confirm: 'User Account Created Successfully',err: ''});
     			}
     		});
     	});
@@ -74,7 +74,7 @@ exports.create = function(req, res) {
 
 exports.loginform = function(req, res)
 {
-	res.render('login', { title: 'Login to Leftoverz Project', err: '' });
+	res.render('login', { title: 'Login to Leftoverz Project', confirm: '',err: '' });
 }
 
 exports.login = function(req, res) {
@@ -85,7 +85,7 @@ exports.login = function(req, res) {
 	{
 		if(( typeof username === "undefined")||(typeof password === "undefined"))
 		{
-			res.render('login', { title: 'Login to Bank', err: ''});
+			res.render('login', { title: 'Login to Leftoverz Project', confirm:'', err: ''});
 		}
 		else
 		{
@@ -109,12 +109,12 @@ exports.login = function(req, res) {
 	    				}else
 	    				{
 	    					console.log("password is wrong");
-				    		res.render('login', { title: 'Login to Leftoverz Project', err: 'Incorrect Login or Password!'} );
+				    		res.render('login', { title: 'Login to Leftoverz Project', confirm:'', err: 'Incorrect Login or Password!'} );
 	    				}
 	    			}else
 	    			{
 			    		console.log("Username does not exist");
-			    		res.render('login', { title: 'Login to Leftoverz Project', err: 'Incorrect Login or Password!'} );
+			    		res.render('login', { title: 'Login to Leftoverz Project', confirm:'', err: 'Incorrect Login or Password!'} );
 	    			}
 	    		});
 	    	});
