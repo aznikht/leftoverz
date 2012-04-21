@@ -11,7 +11,7 @@ program.prompt('Enter Postgres Edlab Account Username: ', function (user) {
 
 function run (user) 
 {
-    connection = 'postgresql://' + user+':Kinghei915@' + host + ':' + port + '/' + user;
+    connection = 'postgresql://' + user+':abc@' + host + ':' + port + '/' + user;
     pg.connect(connection, function (err, client) {
 		if (err)
 		{
@@ -134,10 +134,28 @@ exports.logout = function(req, res) {
     res.redirect('/');
 };
 
+
+function getChatrooms(cb){
+pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+        client.query('SELECT * FROM chatrooms', function(err, result){
+        	cb(result.rows);
+       }); 
+    });
+}
+
 exports.homepage = function(req, res)
 {
-	if(req.session.auth == true )
-		res.render('home', { title: 'Home of Leftoverz Project', user: req.session.username });
+if(req.session.auth == true )
+	{
+	getChatrooms(function(list){
+	res.render('home', { title: 'Home of Leftoverz Project', 
+	user: req.session.username,
+	chatrooms: list});
+	});
+	}
 	else
 		res.redirect('/');
 }

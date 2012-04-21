@@ -6,6 +6,17 @@
 	</audio>
 <p>Welcome <%= user %></p>
 
+<table id="chatrooms">
+<% for(var i=0; i<chatrooms.length; i++){
+var room = chatrooms[i]; %>
+<tr>
+<td><%= chatrooms[i].chatroom_name %></td>
+<td><%= chatrooms[i].user_count %></td>
+</tr>
+<% } %>
+</table>
+
 <form action="/logout">
     <input type="Submit" value="Logout">
 </form>
+
