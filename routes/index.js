@@ -3,6 +3,8 @@ var host = 'db-edlab.cs.umass.edu';
 var port = 7391;
 var connection;
 var program = require('commander');
+var fs = require('fs');
+var path = require('path');
 
 
 program.prompt('Enter Postgres Edlab Account Username: ', function (user) {
@@ -148,8 +150,9 @@ pg.connect(connection, function (err, client) {
 
 exports.homepage = function(req, res)
 {
-if(req.session.auth == true )
+	if(req.session.auth == true )
 	{
+
 	getChatrooms(function(list){
 	res.render('home', { title: 'Home of Leftoverz Project', 
 	user: req.session.username,
@@ -159,3 +162,83 @@ if(req.session.auth == true )
 	else
 		res.redirect('/');
 }
+
+exports.createRoom = function(req, res)
+{
+	getLibrarySongs(function(list){
+		res.render('createroom', {title: 'Create a Music Room!', list: list});
+		});
+	
+}
+
+function getLibrarySongs(cb){
+	var files = fs.readdirSync(__dirname + '/../public/music');
+	for(var i in files) {
+	  console.log('Song name: ' + files[i]);
+	}
+	cb(files);
+}
+
+exports.publishRoom = function(req, res)
+{
+	//need to pass playlist
+	var username = req.session.username;
+	var roomname = req.body.roomname;
+	var host = true;
+	
+	createRoom(username, roomname);
+	
+	res.render('chatroom', {title: roomname,
+							roomname: roomname,
+							host: host}
+	);						
+}
+
+exports.joinRoom = function(req, res)
+{
+	var username = req.session.username;
+	var roomname = req.query.roomname;
+	var host = false;
+	joinRoom(username);
+	
+	res.render('chatroom', {title: roomname,
+							roomname: roomname,
+							host: host}
+	);	
+}
+
+exports.leaveRoom = function(req, res)
+{
+	var username = req.session.username;
+	leaveRoom(username);
+	res.redirect('/home');
+}
+
+function createRoom(username, roomname){
+	pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+        client.query('INSERT INTO chatrooms VALUES ($1, $2)', [roomname, 'nothing']); 
+        client.query('INSERT INTO activeusers VALUES ($1, $2)', [username, roomname]); 
+    });
+}
+
+function joinRoom(username, roomname){
+pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+        client.query('INSERT INTO activeusers VALUES ($1, $2)', [username, roomname]); 
+    });
+}
+
+function leaveRoom(username){
+pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+		client.query('DELETE FROM activeusers WHERE username=$1', [username]);   
+});
+}
+

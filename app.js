@@ -38,6 +38,10 @@ app.get('/creating', routes.create);
 app.post('/creating', routes.create);
 app.get('/home', routes.homepage);
 app.post('/home', routes.homepage);
+app.get('/createRoom', routes.createRoom);
+app.get('/publish', routes.publishRoom);
+app.get('/chatroom/:roomname', routes.joinRoom);
+app.get('/leaveRoom', routes.leaveRoom);
 
 app.listen(8888);
 
