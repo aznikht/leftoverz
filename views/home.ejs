@@ -7,13 +7,29 @@
 <p>Welcome <%= user %></p>
 
 <table id="chatrooms">
-<% for(var i=0; i<chatrooms.length; i++){
-var room = chatrooms[i]; %>
 <tr>
-<td><%= chatrooms[i].chatroom_name %></td>
+<td>Music Room</td>
+<td>Host</td>
+<td># of Guests</td>
+</tr>
+<% for(var i=0; i<chatrooms.length; i++){
+var room = chatrooms[i];%>
+<tr>
+<td><a href='/chatroom/<%=room.chatroom_name%>'> <%=room.chatroom_name%> </a></td>
+<td><%= room.host_name %></td>
+<td>#</td>
 </tr>
 <% } %>
 </table>
+
+<div id="createRoom">
+<form name="createRoom" action="/hostroom" method="POST" accept-charset="utf-8" onsubmit="return validateRoom()">
+<p> Music Room Name: <input type="text" name="roomname"></p>
+<p><input type="submit" value="Create Music Room"></p>
+</form>
+</div>
+<div id="jsError"></div>
+
 
 <form action="/logout">
     <input type="Submit" value="Logout">

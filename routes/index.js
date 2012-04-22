@@ -142,7 +142,7 @@ pg.connect(connection, function (err, client) {
         if (err) {
             throw err;
         }
-        client.query('SELECT * FROM chatrooms', function(err, result){
+        client.query('SELECT * FROM musicrooms', function(err, result){
         	cb(result.rows);
        }); 
     });
@@ -163,10 +163,14 @@ exports.homepage = function(req, res)
 		res.redirect('/');
 }
 
-exports.createRoom = function(req, res)
+exports.hostRoom = function(req, res)
 {
+	var roomname = req.body.roomname;
+	var username = req.session.username;
 	getLibrarySongs(function(list){
-		res.render('createroom', {title: 'Create a Music Room!', list: list});
+		res.render('musicroom', {title: roomname,
+		roomname: roomname, hostname: username,
+		host: true, playlist: list});
 		});
 	
 }
@@ -181,30 +185,25 @@ function getLibrarySongs(cb){
 
 exports.publishRoom = function(req, res)
 {
-	//need to pass playlist
 	var username = req.session.username;
-	var roomname = req.body.roomname;
-	var host = true;
-	
-	createRoom(username, roomname);
-	
-	res.render('chatroom', {title: roomname,
-							roomname: roomname,
-							host: host}
-	);						
+	var roomname = req.body.roomname;	
+	createRoom(username, roomname);					
 }
 
 exports.joinRoom = function(req, res)
 {
 	var username = req.session.username;
-	var roomname = req.query.roomname;
-	var host = false;
-	joinRoom(username);
+	var roomname = req.params.roomname;
+	joinRoom(username, roomname);
 	
-	res.render('chatroom', {title: roomname,
-							roomname: roomname,
-							host: host}
-	);	
+	getHost(roomname, function(result){
+		res.render('musicroom', {title: roomname,
+		roomname: roomname,
+		hostname: result,
+		host: false});
+	});
+
+		
 }
 
 exports.leaveRoom = function(req, res)
@@ -214,13 +213,23 @@ exports.leaveRoom = function(req, res)
 	res.redirect('/home');
 }
 
+function getHost(roomname){
+	pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+        var sql = 'SELECT host_name FROM musicrooms WHERE chatroom_name=$1'
+        	client.query(sql, [roomname], function(err, result){ cb(result) }); 
+    });
+}
+
 function createRoom(username, roomname){
 	pg.connect(connection, function (err, client) {
         if (err) {
             throw err;
         }
-        client.query('INSERT INTO chatrooms VALUES ($1, $2)', [roomname, 'nothing']); 
-        client.query('INSERT INTO activeusers VALUES ($1, $2)', [username, roomname]); 
+        client.query('INSERT INTO musicrooms VALUES ($1, $2)', [roomname, username]); 
+        client.query('UPDATE users SET chatroom = $1 WHERE username = $2', [roomname, username]); 
     });
 }
 
@@ -229,7 +238,7 @@ pg.connect(connection, function (err, client) {
         if (err) {
             throw err;
         }
-        client.query('INSERT INTO activeusers VALUES ($1, $2)', [username, roomname]); 
+        client.query('UPDATE users SET chatroom = $1 WHERE username = $2', [roomname, username]);
     });
 }
 
@@ -238,7 +247,46 @@ pg.connect(connection, function (err, client) {
         if (err) {
             throw err;
         }
-		client.query('DELETE FROM activeusers WHERE username=$1', [username]);   
+		client.query('UPDATE users SET chatroom = $1 WHERE username = $2', [null, username]);
 });
+}
+
+exports.set_song = function(req, res)
+{
+	var data = req.body;
+	if(data)
+	{
+		var song = data.songname;
+		var roomname = data.roomname;
+		setSong(song, roomname);
+	}
+};
+
+function setSong(song, roomname){
+	pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+        client.query('UPDATE musicrooms SET current_song = $1 WHERE chatroom_name = $2', [song, roomname]);
+    });
+}
+
+
+exports.get_song = function(req, res)
+{
+	var roomname = req.query.roomname;
+	getSong(roomname, function(song){
+		res.send({ 'song' : song });
+	});
+};
+
+function getSong(roomname, cb){
+	pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+        var sql = 'SELECT current_song FROM musicrooms WHERE chatroom_name=$1'
+        client.query(sql, [roomname], function(err, result){ cb(result) }); 
+    });
 }
 

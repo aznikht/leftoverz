@@ -1,4 +1,4 @@
-
+var playlist = []
 function validateLogin()
 {
 	var name =document.forms["loginform"]["username"].value;
@@ -35,5 +35,29 @@ function validateCreate()
 	return true;
 	
 }
+
+function validateRoom()
+{
+	var alphanum = /^[\w ]+$/;
+	var name =document.forms["createRoom"]["roomname"].value;
+	if(!alphanum.test(name))
+	{
+		document.getElementById("jsError").innerHTML="Username and Password must contain only letters and numbers";
+		return false;
+	}else
+	{
+		var table = document.getElementById('songList')
+		for(var i = 0; i< table.rows.length; i++)
+		{
+			if(table.rows(i).css('display')=='')
+			{
+				playlist.push(table.rows(i).textContent);
+			}
+		}
+		document.getElementById("customPlaylist").val(playlist);
+		return true;
+	}
+}
+
 
 

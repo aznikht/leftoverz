@@ -1,0 +1,46 @@
+<head>
+<%if(host){%>
+<script src="/javascripts/hostcontrols.js"></script>
+<%}%>
+<%if(!host){%>
+<script src="/javascripts/musicpoll.js"></script>
+<%}%>
+</head>
+
+<audio id="music"></audio>
+
+<h1><%= roomname %></h1>
+<h2>Hosted by: <%=hostname%></h2>
+<br>
+<br>
+<div id="currentSong"></div>
+
+<%if(host){%>
+
+	//display playlist, controls, etc.
+	
+	<div id="library">
+	<p>Music Library</p>
+	<table id="libraryList">
+	<% for(var i=0; i<list.length; i++){
+	var song = list[i]; %>
+	<tr>
+	<td id="song_<%=i%>" href="" onclick="selectSong(this, 0); return false;" ><%= song %></td>
+	</tr>
+	<% } %>
+	</table>
+	</div>
+	
+	<div id="playlist">
+	<p>Your Playlist</p>
+	<table id="songList">
+	<% for(var i=0; i<list.length; i++){
+	var song = list[i]; %>
+	<tr>
+	<td id="mysong_<%=i%>" href="" onclick="selectSong(this, 1); return false;" style="display: none"><%= song %></td>
+	</tr>
+	<% } %>
+	</table>
+	</div>
+
+<%}%>
