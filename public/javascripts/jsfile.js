@@ -1,4 +1,3 @@
-var playlist = []
 function validateLogin()
 {
 	var name =document.forms["loginform"]["username"].value;
@@ -40,23 +39,36 @@ function validateRoom()
 {
 	var alphanum = /^[\w ]+$/;
 	var name =document.forms["createRoom"]["roomname"].value;
+	var found = create_room();
 	if(!alphanum.test(name))
 	{
-		document.getElementById("jsError").innerHTML="Username and Password must contain only letters and numbers";
+		document.getElementById("jsError").innerHTML="Room Name must contain only letters and numbers";
 		return false;
 	}else
 	{
-		var table = document.getElementById('songList')
-		for(var i = 0; i< table.rows.length; i++)
-		{
-			if(table.rows(i).css('display')=='')
-			{
-				playlist.push(table.rows(i).textContent);
-			}
-		}
-		document.getElementById("customPlaylist").val(playlist);
-		return true;
+		return found;
 	}
+	return true;
+}
+
+var create_room = function()
+{
+	var room = document.forms["createRoom"]["roomname"].value;
+	var req= $.ajax({
+		type: 'POST',
+		url: '/isRoomExist',
+		data:{'roomname': room}
+	});
+	req.done(function (data) {
+		if(data.found)
+		{
+			$('#jsError').text('Roomname already exists!');
+			return false;
+		}else
+		{
+			return true;
+		}
+	});
 }
 
 

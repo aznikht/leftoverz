@@ -1,4 +1,5 @@
 <head>
+<script src="/javascripts/chat.js"></script>
 <%if(host){%>
 <script src="/javascripts/hostcontrols.js"></script>
 <%}%>
@@ -9,7 +10,7 @@
 
 <audio id="music"></audio>
 
-<h1><%= roomname %></h1>
+<h1 id="roomH1"><%= roomname %></h1>
 <h2>Hosted by: <%=hostname%></h2>
 <br>
 <br>
@@ -39,3 +40,13 @@
 	</div>
 
 <%}%>
+
+<div id='users'></div>
+
+<div id='chat'></div>
+
+<textarea id="msg" maxlength="140"></textarea>
+<br>
+<button id="send">Send Message</button>
+
+<button id='leave'>Leave Room</button>

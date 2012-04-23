@@ -43,7 +43,12 @@ app.post('/publish', routes.publishRoom);
 app.get('/chatroom/:roomname', routes.joinRoom);
 app.get('/leaveRoom', routes.leaveRoom);
 app.get('/get-song', routes.get_song);
+app.get('/get-msg', routes.get_msg);
+app.get('/get-usrs', routes.get_usrs);
+app.post('/set-msg', routes.set_msg);
 app.post('/set-song', routes.set_song);
+app.post('/isRoomExist', routes.isRoomExist);
+
 
 app.listen(8888);
 

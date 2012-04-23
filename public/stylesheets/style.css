@@ -6,3 +6,49 @@ body {
 a {
   color: #00B7FF;
 }
+
+textarea#msg {
+	border: 2px solid;
+	padding: 5px;
+	width: 600px;
+	height: 75px;
+	resize: none;
+}
+
+div#chat {
+	border: 2px solid;
+	padding: 5px;
+	width: 600px;
+	height: 300px;
+	overflow-y: auto;
+}
+
+div#users {
+	border: 2px solid;
+	padding: 5px;
+	width: 100px;
+	height: 100px;
+	overflow-y: auto;
+}
+
+table {
+  float:left;
+  vertical-align: middle;
+  border:2px solid gray;
+  padding:5px;
+  
+  
+
+}
+
+.table1{
+  float: left;
+}
+
+.table2{
+  float: right;
+}
+
+td:hover {
+  background-color: #f7bad7;
+}

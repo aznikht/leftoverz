@@ -1,7 +1,7 @@
 var currentSong = 'nothing!';
-var roomname = $('#roomname').text;
+var roomname;
 
-var getSong =  '/get-song?roomname=' + roomname;
+var getSong;
 
 var get_song = function() {
 	var req= $.ajax({
@@ -12,10 +12,10 @@ var get_song = function() {
 	req.done(function (data) {
 		var song = data.song;
 		if(song!=currentSong){
-			var path = '/music/' + song + '.mp3';
+			var path = '/music/' + song;
 			$('#music').attr('src', path);
 			playSong();
-			$('#currentSong').text(song);
+			$('#currentSong').html('Current Song: '+song);
 			currentSong = song;
 			}
 	});
@@ -39,6 +39,9 @@ var stop_polling = function () {
 };
 
 $(function () {
+	roomname = $('#roomH1').html();
+	getSong =  '/get-song?roomname=' + roomname;
+	alert(roomname);
 	get_song();
 	start_polling();
 });

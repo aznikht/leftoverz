@@ -101,7 +101,6 @@ exports.login = function(req, res) {
 	    				throw err;
 	    			else if(result.rows.length != 0)
 	    			{
-	    				console.log(result);
 	    				if(result.rows[0].password == password)
 	    				{
 			    			console.log("found account match");
@@ -178,9 +177,6 @@ exports.hostRoom = function(req, res)
 
 function getLibrarySongs(cb){
 	var files = fs.readdirSync(__dirname + '/../public/music');
-	for(var i in files) {
-	  console.log('Song name: ' + files[i]);
-	}
 	cb(files);
 }
 
@@ -200,7 +196,7 @@ exports.joinRoom = function(req, res)
 	getHost(roomname, function(result){
 		res.render('musicroom', {title: roomname,
 		roomname: roomname,
-		hostname: result,
+		hostname: result.rows[0].host_name,
 		host: false});
 	});
 
@@ -214,13 +210,37 @@ exports.leaveRoom = function(req, res)
 	res.redirect('/home');
 }
 
-function getHost(roomname){
+function getHost(roomname, cb){
 	pg.connect(connection, function (err, client) {
         if (err) {
             throw err;
         }
         var sql = 'SELECT host_name FROM musicrooms WHERE chatroom_name=$1'
-        	client.query(sql, [roomname], function(err, result){ cb(result) }); 
+        	client.query(sql, [roomname], function(err, result){  cb(result); }); 
+    });
+}
+
+exports.isRoomExist = function(req, res)
+{
+	var roomname = req.body.roomname;
+	pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+        client.query('SELECT chatroom_name FROM musicrooms WHERE chatroom_name = $1', [roomname], function(err, result){
+        	if(err)
+        		throw err;
+			else if(result.rows.length != 0)
+			{
+				res.contentType('application/json');
+        		res.send({'found': true });
+			}else
+        	{
+        		res.contentType('application/json');
+        		res.send({'found': false });
+        	}
+        }); 
+        
     });
 }
 
@@ -268,7 +288,7 @@ function setSong(song, roomname){
         if (err) {
             throw err;
         }
-        client.query('UPDATE musicrooms SET current_song = $1 WHERE chatroom_name = $2', [song, roomname]);
+        client.query('UPDATE musicrooms SET current_song = $1 WHERE chatroom_name = $2;', [song, roomname]);
     });
 }
 
@@ -277,17 +297,76 @@ exports.get_song = function(req, res)
 {
 	var roomname = req.query.roomname;
 	getSong(roomname, function(song){
-		res.send({ 'song' : song });
+		res.contentType('application/json');
+		res.send({ 'song' : song.rows[0].current_song });
 	});
 };
 
-function getSong(roomname, cb){
+function getSong(rm, cb){
 	pg.connect(connection, function (err, client) {
         if (err) {
             throw err;
         }
-        var sql = 'SELECT current_song FROM musicrooms WHERE chatroom_name=$1'
-        client.query(sql, [roomname], function(err, result){ cb(result) }); 
+        var sql = 'SELECT current_song FROM musicrooms WHERE chatroom_name=$1;'
+        client.query(sql, [rm], function(err, result){ cb(result); }); 
     });
 }
 
+exports.get_msg = function(req, res){
+	var roomname = req.query.roomname;
+	var last_mid = req.query.lastmid;
+getMessages(roomname, last_mid, function(rows){
+		res.contentType('application/json');
+		res.send({ 'msgs' : rows });
+		});
+};
+
+function getMessages(roomname, last, cb){
+pg.connect(connection, function (err, client) {
+       		 if (err) {
+            		throw err;
+        		 }
+        		var sql = 'SELECT * FROM chat_messages WHERE mid>$1 AND chatroom_name = $2';
+     		client.query(sql, [last, roomname], function(err, result){ cb(result.rows); }); 
+    	});
+}
+
+exports.set_msg = function(req, res){
+var data = req.body;
+if (data) {
+	var username = req.session.username;
+	var msg = data.msg;
+	var roomname = data.roomname;
+	storeMessage(username, msg, roomname);
+}
+ 
+};
+
+function storeMessage(username, message, roomname){
+	pg.connect(connection, function (err, client) {
+        	if (err) {
+            	throw err;
+      	  }
+        	var sql = 'INSERT INTO chat_messages VALUES(default, $1, $2, $3, $4)';
+       	var query = client.query(sql, [roomname, username, message, new Date()]);
+   	 });
+}
+
+exports.get_usrs = function(req, res){
+var roomname = req.query.roomname;
+getUsers(roomname, function(users){
+		res.contentType('application/json');
+		res.send({ 'users' : users });
+		});
+};
+
+function getUsers(roomname, cb){
+pg.connect(connection, function (err, client) {
+        		if (err) {
+            		throw err;
+        		}
+        		var sql = 'SELECT username FROM users WHERE chatroom=$1';  
+//is it username && roomname??
+        		client.query(sql, [roomname], function(err, result){console.log(result.rows);cb(result.rows);}); 
+    	});
+}
