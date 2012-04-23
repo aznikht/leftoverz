@@ -165,6 +165,7 @@ exports.homepage = function(req, res)
 
 exports.hostRoom = function(req, res)
 {
+	
 	var roomname = req.body.roomname;
 	var username = req.session.username;
 	getLibrarySongs(function(list){

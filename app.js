@@ -38,7 +38,7 @@ app.get('/creating', routes.create);
 app.post('/creating', routes.create);
 app.get('/home', routes.homepage);
 app.post('/home', routes.homepage);
-app.get('/hostroom', routes.hostRoom);
+app.post('/hostroom', routes.hostRoom);
 app.post('/publish', routes.publishRoom);
 app.get('/chatroom/:roomname', routes.joinRoom);
 app.get('/leaveRoom', routes.leaveRoom);

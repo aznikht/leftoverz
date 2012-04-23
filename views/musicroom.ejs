@@ -16,16 +16,18 @@
 <div id="currentSong"></div>
 
 <%if(host){%>
-
-	//display playlist, controls, etc.
+	<form name="launchRoom" action="/publish" method="POST" accept-charset="utf-8" onsubmit="return validateLaunch()">
+    <input type='hidden' value="<%= roomname %>">
+    <input id='launch' type="Submit" value="Launch Music Room">
+	</form>
 	
 	<div id="library">
 	<p>Music Library</p>
 	<table id="libraryList">
-	<% for(var i=0; i<list.length; i++){
-	var song = list[i]; %>
+	<% for(var i=0; i<playlist.length; i++){
+	var song = playlist[i]; %>
 	<tr>
-	<td id="song_<%=i%>" href="" onclick="selectSong(this, 0); return false;" ><%= song %></td>
+	<td id="lib_<%=i%>" href="" onclick="selectSong(this, 0); return false;" value='<%=song%>' > + <%= song %></td>
 	</tr>
 	<% } %>
 	</table>
@@ -34,12 +36,6 @@
 	<div id="playlist">
 	<p>Your Playlist</p>
 	<table id="songList">
-	<% for(var i=0; i<list.length; i++){
-	var song = list[i]; %>
-	<tr>
-	<td id="mysong_<%=i%>" href="" onclick="selectSong(this, 1); return false;" style="display: none"><%= song %></td>
-	</tr>
-	<% } %>
 	</table>
 	</div>
 
