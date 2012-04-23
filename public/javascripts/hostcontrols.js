@@ -31,7 +31,6 @@ function updatePlaylist()
 	{
 		arraySongs.push(table.rows[i].cells[0].value);
 	}
-	alert(arraySongs.length);
 }
 
 function setCurrentSong()
@@ -50,19 +49,31 @@ function validateLaunch()
 		return false;
 	}else
 	{
-		$('#launch').css('display', 'hidden');
+		$('#launch').hide();
 		setCurrentSong();
 		table.deleteRow(0);
 		arraySongs.splice(0, 1);
+		create_room();
 		set_song();
 	}
 }
 
+var create_room = function()
+{
+	var room = $('#room').attr('value');
+	var req= $.ajax({
+		type: 'POST',
+		url: '/publish',
+		data:{'roomname': room}
+	});
+}
+
 var set_song = function() {
+	var room = $('#room').attr('value');
 	var req= $.ajax({
 		type: 'POST',
 		url: '/set-song',
-		data:{'songname': currentSong, 'roomname': roomname}
+		data:{'songname': currentSong, 'roomname': room}
 	});
 };
 

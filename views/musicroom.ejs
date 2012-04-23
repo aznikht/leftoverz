@@ -16,10 +16,9 @@
 <div id="currentSong"></div>
 
 <%if(host){%>
-	<form name="launchRoom" action="/publish" method="POST" accept-charset="utf-8" onsubmit="return validateLaunch()">
-    <input type='hidden' value="<%= roomname %>">
-    <input id='launch' type="Submit" value="Launch Music Room">
-	</form>
+
+    <input id='room' type='hidden' value="<%= roomname %>">
+    <input id='launch' type="Submit" value="Launch Music Room" onclick='validateLaunch()'>
 	
 	<div id="library">
 	<p>Music Library</p>
