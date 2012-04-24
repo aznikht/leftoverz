@@ -8,7 +8,8 @@
 <%}%>
 </head>
 
-<audio id="music"></audio>
+<div id="container">
+<audio id="music" autoplay="autoplay"></audio>
 
 <h1 id="roomH1"><%= roomname %></h1>
 <h2>Hosted by: <%=hostname%></h2>
@@ -21,9 +22,10 @@
     <input id='room' type='hidden' value="<%= roomname %>">
     <input id='launch' type="Submit" value="Launch Music Room" onclick='validateLaunch()'>
 	
-	<div id="library">
-	<p>Music Library</p>
-	<table id="libraryList">
+	<div id="listcontainer">
+	<div id="songlistTable">
+	<h2>Music Library</h2>
+	<table id="songlist" style="border:none; text-align: left;">
 	<% for(var i=0; i<playlist.length; i++){
 	var song = playlist[i]; %>
 	<tr>
@@ -32,21 +34,32 @@
 	<% } %>
 	</table>
 	</div>
-	
-	<div id="playlist">
-	<p>Your Playlist</p>
-	<table id="songList">
+
+	<div id="playlistTable">
+	<h2>Your Playlist</h2>
+	<table id="playlist" style="border:none; text-align: left;">
 	</table>
+	</div>
 	</div>
 
 <%}%>
+<h2 style="float:left; margin-left: 280px">Chat Log</h2>
+<h2 style="float:right; margin-right: 80px">Users</h2>
+<div id='chat'>
+</div>
 
 <div id='users'></div>
-
-<div id='chat'></div>
-
 <textarea id="msg" maxlength="140"></textarea>
 <br>
 <button id="send">Send Message</button>
+<form action="/leaveRoom" method="POST" accept-charset="utf-8">
+	<input type='hidden' name="roomName" value="<%= roomname %>">
+    <input type="Submit" value="Leave Room">
+</form>
+</div>
 
-<button id='leave'>Leave Room</button>
+<div id="logout">
+<form action="/logout">
+    <input type="Submit" value="Logout">
+</form>
+</div>

@@ -15,10 +15,27 @@ var get_song = function() {
 			var path = '/music/' + song;
 			$('#music').attr('src', path);
 			playSong();
-			$('#currentSong').html('Current Song: '+song);
+			$('#currentSong').html('<ul>Current Song</ul> <br>'+song);
 			currentSong = song;
 			}
 	});
+};
+
+var check_host = function(){
+		var req = $.ajax({
+		type: 'POST',
+		url : '/hasHost',
+		data: {'roomname' : roomname }
+	});
+	req.done(function (data) {
+		if(data.hosted == false)
+			window.location = "http://elnux7.cs.umass.edu:8888/home"
+	});
+}
+
+var pollEverything = function(){
+	check_host();
+	get_song();
 };
  
 function playSong(){
@@ -29,7 +46,7 @@ function playSong(){
 var interval_id;
 
 var start_polling = function () {
-	interval_id = setInterval(get_song, 3000);
+	interval_id = setInterval(pollEverything, 3000);
 };
 
 var stop_polling = function () {
@@ -41,7 +58,6 @@ var stop_polling = function () {
 $(function () {
 	roomname = $('#roomH1').html();
 	getSong =  '/get-song?roomname=' + roomname;
-	alert(roomname);
 	get_song();
 	start_polling();
 });

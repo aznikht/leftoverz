@@ -1,11 +1,8 @@
 <!-- Homepage View -->
+<div id="container">
 <h1>Home of Leftoverz Project</h1>
-	<audio controls="controls">
- 	<source src="/music/07 Talking to the Moon.mp3" type="audio/mp3" />
-  	Your browser does not support the audio element.
-	</audio>
 <p>Welcome <%= user %></p>
-
+<div id="listcontainer">
 <table id="chatrooms">
 <tr>
 <td>Music Room</td>
@@ -21,6 +18,7 @@ var room = chatrooms[i];%>
 </tr>
 <% } %>
 </table>
+</div>
 </br>
 <div id="createRoom">
 <form name="createRoom" action="/hostroom" method="POST" accept-charset="utf-8" onsubmit="return validateRoom();">
@@ -29,9 +27,9 @@ var room = chatrooms[i];%>
 </form>
 </div>
 <div id="jsError"></div>
-
-
+</div>
+<div id="logout">
 <form action="/logout">
     <input type="Submit" value="Logout">
 </form>
-
+</div>

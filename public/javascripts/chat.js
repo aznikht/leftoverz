@@ -43,10 +43,29 @@ var set_msg = function () {
 	});
 };
 
+var check_host = function(){
+		var req = $.ajax({
+		type: 'POST',
+		url : '/hasHost',
+		data: {'roomname' : roomname }
+	});
+	req.done(function (data) {
+		if(data.hosted == false)
+			window.location = "http://elnux7.cs.umass.edu:8888/home"
+	});
+}
+
+var pollEverything = function(){
+	if($('#launch').is(":hidden"))
+		check_host();
+	get_msg();
+	get_usrs();
+};
+
 var msg_interval_id;
 
 var start_polling_msg = function () {
-	msg_interval_id = setInterval(get_msg, 3000);
+	msg_interval_id = setInterval(pollEverything, 3000);
 };
 
 var stop_polling_msg = function () {
@@ -62,17 +81,17 @@ $(function () {
 	get_usrs();
 	get_msg();
 	start_polling_msg();
-
+	$('#msg').keypress(function (event) {
+		if(event.keyCode == 13)
+		{
+			var msg = $('#msg').attr('value');
+			if(msg=='' || msg==null){alert('Please type a message.');}
+			if(msg.length>0){set_msg();}
+		}
+		});
 	$('#send').click(function(){
 		var msg = $('#msg').attr('value');
 		if(msg=='' || msg==null){alert('Please type a message.');}
 		if(msg.length>0){set_msg();}
-	});
-
-$('#leave').click(function(){
-var req = $.ajax({
-			type: 'GET',
-			url : '/leaveRoom' });
-
 	});
 });

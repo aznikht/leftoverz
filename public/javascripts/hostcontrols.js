@@ -12,7 +12,7 @@ function selectSong(elem)
 
 	var id = $(elem).attr('id');
 	var song = $(elem).attr('value');
-	var table = document.getElementById('songList');
+	var table = document.getElementById('playlist');
 	var rowCount = table.rows.length;
 	var row = table.insertRow(rowCount);
 	var content = row.insertCell(0);
@@ -24,7 +24,7 @@ function selectSong(elem)
 
 function updatePlaylist()
 {
-	var table = document.getElementById('songList');
+	var table = document.getElementById('playlist');
 	var rowNum = table.rows.length;
 	arraySongs.length = 0;
 	for(var i = 0; i < rowNum; i++)
@@ -37,11 +37,14 @@ function setCurrentSong()
 {
 	if(arraySongs.length != 0)
 		currentSong = arraySongs[0];
+	else
+		currentSong = '';
+			
 }
 
 function validateLaunch()
 {
-	var table = document.getElementById('songList');
+	var table = document.getElementById('playlist');
 	var rowNum = table.rows.length;
 	if(rowNum == 0)
 	{
@@ -55,6 +58,7 @@ function validateLaunch()
 		arraySongs.splice(0, 1);
 		create_room();
 		set_song();
+		playSong();
 	}
 }
 
@@ -77,5 +81,32 @@ var set_song = function() {
 	});
 };
 
+var get_next = function(){
+	setCurrentSong();
+	var table = document.getElementById('playlist');
+	if(currentSong != '')
+	{
+		table.deleteRow(0);
+		arraySongs.splice(0, 1);
+	}
+	updatePlaylist();
+	return currentSong;
+};
 
+function playSong(){
+	var path = '/music/' + currentSong;
+	var music = document.getElementById("music");
+	$('#music').attr('src', path);
+	music.play();
+	$('#currentSong').html('Current Song: '+currentSong);
+
+}
+
+$(function () {
+	$('#music').bind('ended', function() {
+		get_next();
+		set_song();
+		playSong();
+	});
+});
  

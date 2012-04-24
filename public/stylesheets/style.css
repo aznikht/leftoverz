@@ -1,26 +1,18 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+  text-align: center;
+  background-image:url('equalizer.jpg');
+  background-repeat:repeat-x;
+  background-position:bottom;
 }
 
 a {
   color: #00B7FF;
 }
 
-textarea#msg {
-	border: 2px solid;
-	padding: 5px;
-	width: 600px;
-	height: 75px;
-	resize: none;
-}
-
-div#chat {
-	border: 2px solid;
-	padding: 5px;
-	width: 600px;
-	height: 300px;
-	overflow-y: auto;
+td:hover {
+  background-color: #f7bad7;
 }
 
 div#users {
@@ -36,19 +28,93 @@ table {
   vertical-align: middle;
   border:2px solid gray;
   padding:5px;
-  
-  
+}
+
+div#container{
+  background-color: #3b5998;
+  width: 800px;
+  height:500px;
+  padding: 5px;
+  border: solid #C0A8C0;
+  overflow-y:auto;
+  opacity:0.75;
 
 }
 
-.table1{
+div#logout{
+  position:fixed;
+  top: 0em;
+  right:0em;
+  }
+
+div#listcontainer{
+  width: 450px;
+  height: auto;
+}
+
+div#songlistTable{
+  width: 49%;
+  height: 300px;
   float: left;
+  overflow-y: auto;
+  border: thin solid gray;
 }
 
-.table2{
+div#playlistTable{
+  width: 49%;
+  height:300px;
   float: right;
+  overflow-y: auto;
+  border: thin solid gray;
 }
 
-td:hover {
-  background-color: #f7bad7;
+div#chat{
+  float:left;
+  width: 600px;
+  height: 300px;
+  overflow-y:auto;
+  border: thin solid gray;
+  background-color: #ffffff;
 }
+
+div#users{
+  float: right;
+  width: 168px;
+  height: 290px;
+  overflow-y:auto;
+  border:thin solid gray;
+  background-color: #ffffff;
+
+}
+
+textarea#msg{
+  width: 777px;
+  height: 75px;
+  border: thin solid gray;
+  resize: none;
+}
+
+
+div#loginForm{
+  margin-left:auto;
+  margin-right:auto;
+  padding: 5px;
+  width: 500px;
+  height: 200px;
+  background-color: #ffffff;
+}
+
+div#songname {
+  width:100%;
+}
+
+div#songname:hover {
+  background-color: #82aad3;
+}
+
+div#currentSong
+{
+	font-size: 18px;
+}
+
+

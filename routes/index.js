@@ -183,8 +183,14 @@ function getLibrarySongs(cb){
 exports.publishRoom = function(req, res)
 {
 	var username = req.session.username;
-	var roomname = req.body.roomname;	
-	createRoom(username, roomname);					
+	var roomname = req.body.roomname;
+	isRoomExist(roomname, function(found){
+		if(found == false)
+			createRoom(username, roomname);	
+		else
+			console.log("room exists!");
+	});
+					
 }
 
 exports.joinRoom = function(req, res)
@@ -206,8 +212,21 @@ exports.joinRoom = function(req, res)
 exports.leaveRoom = function(req, res)
 {
 	var username = req.session.username;
-	leaveRoom(username);
-	res.redirect('/home');
+	var roomname = req.body.roomName;
+	console.log(roomname);
+	isRoomExist(roomname, function(sol){
+		console.log(sol);
+	if(sol == true)
+	{
+		getHost(roomname, function(result){
+			if(result.rows[0].host_name == username)
+				destroyRoom(roomname);
+		leaveRoom(username);
+		});
+	}
+			res.redirect('/home');
+	});
+
 }
 
 function getHost(roomname, cb){
@@ -220,9 +239,8 @@ function getHost(roomname, cb){
     });
 }
 
-exports.isRoomExist = function(req, res)
+function isRoomExist(roomname, cb)
 {
-	var roomname = req.body.roomname;
 	pg.connect(connection, function (err, client) {
         if (err) {
             throw err;
@@ -230,14 +248,15 @@ exports.isRoomExist = function(req, res)
         client.query('SELECT chatroom_name FROM musicrooms WHERE chatroom_name = $1', [roomname], function(err, result){
         	if(err)
         		throw err;
-			else if(result.rows.length != 0)
+			else if(result == undefined)
 			{
-				res.contentType('application/json');
-        		res.send({'found': true });
-			}else
+				cb(false);
+			}else if(result.rows.length == 0)
         	{
-        		res.contentType('application/json');
-        		res.send({'found': false });
+        		cb(false);
+        	}else
+        	{
+        		cb(true);
         	}
         }); 
         
@@ -251,7 +270,7 @@ function createRoom(username, roomname){
         }
         client.query('INSERT INTO musicrooms VALUES ($1, $2)', [roomname, username]); 
         client.query('UPDATE users SET chatroom = $1 WHERE username = $2', [roomname, username]); 
-    });
+	});
 }
 
 function joinRoom(username, roomname){
@@ -260,7 +279,7 @@ pg.connect(connection, function (err, client) {
             throw err;
         }
         client.query('UPDATE users SET chatroom = $1 WHERE username = $2', [roomname, username]);
-    });
+});
 }
 
 function leaveRoom(username){
@@ -268,7 +287,18 @@ pg.connect(connection, function (err, client) {
         if (err) {
             throw err;
         }
-		client.query('UPDATE users SET chatroom = $1 WHERE username = $2', [null, username]);
+		client.query('UPDATE users SET chatroom = $1 WHERE username = $2', ['', username]);
+});
+}
+
+function destroyRoom(roomname)
+{
+	pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+		client.query('DELETE FROM musicrooms WHERE chatroom_name = $1', [roomname]);
+		client.query('DELETE FROM chat_messages WHERE chatroom_name = $1', [roomname]);
 });
 }
 
@@ -296,9 +326,18 @@ function setSong(song, roomname){
 exports.get_song = function(req, res)
 {
 	var roomname = req.query.roomname;
-	getSong(roomname, function(song){
-		res.contentType('application/json');
-		res.send({ 'song' : song.rows[0].current_song });
+	res.contentType('application/json');
+	isRoomExist(roomname, function(sol){
+		console.log(sol);
+	if(sol == true)
+	{
+		getSong(roomname, function(song){
+			res.send({ 'song' : song.rows[0].current_song });
+		});
+	}else
+	{
+		res.send({ 'song' : '' });
+	}
 	});
 };
 
@@ -352,6 +391,35 @@ function storeMessage(username, message, roomname){
    	 });
 }
 
+function has_Host(roomname, cb){
+	pg.connect(connection, function (err, client) {
+        if (err) {
+            throw err;
+        }
+        var sql = 'SELECT * FROM musicrooms WHERE chatroom_name=$1'
+        	client.query(sql, [roomname], function(err, result){  cb(result); }); 
+    });
+}
+
+exports.hasHost = function(req, res){
+	res.contentType('application/json');
+	has_Host(req.body.roomname, function(result){
+		if(result == undefined)
+		{
+			res.send({ 'hosted' : false });
+		}else if(result.rows.length == 0)
+		{
+			
+			res.send({ 'hosted' : false });
+		}else
+		{
+			res.send({ 'hosted' : true });
+		}
+	});
+};
+
+
+
 exports.get_usrs = function(req, res){
 var roomname = req.query.roomname;
 getUsers(roomname, function(users){
@@ -366,7 +434,6 @@ pg.connect(connection, function (err, client) {
             		throw err;
         		}
         		var sql = 'SELECT username FROM users WHERE chatroom=$1';  
-//is it username && roomname??
-        		client.query(sql, [roomname], function(err, result){console.log(result.rows);cb(result.rows);}); 
+        		client.query(sql, [roomname], function(err, result){cb(result.rows);}); 
     	});
 }
