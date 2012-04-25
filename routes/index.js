@@ -213,9 +213,7 @@ exports.leaveRoom = function(req, res)
 {
 	var username = req.session.username;
 	var roomname = req.body.roomName;
-	console.log(roomname);
 	isRoomExist(roomname, function(sol){
-		console.log(sol);
 	if(sol == true)
 	{
 		getHost(roomname, function(result){
@@ -328,7 +326,6 @@ exports.get_song = function(req, res)
 	var roomname = req.query.roomname;
 	res.contentType('application/json');
 	isRoomExist(roomname, function(sol){
-		console.log(sol);
 	if(sol == true)
 	{
 		getSong(roomname, function(song){
@@ -352,6 +349,7 @@ function getSong(rm, cb){
 }
 
 exports.get_msg = function(req, res){
+	console.log(req.session.username+" getting messages");
 	var roomname = req.query.roomname;
 	var last_mid = req.query.lastmid;
 getMessages(roomname, last_mid, function(rows){
@@ -437,3 +435,26 @@ pg.connect(connection, function (err, client) {
         		client.query(sql, [roomname], function(err, result){cb(result.rows);}); 
     	});
 }
+
+exports.song_upload = function (req, res, next) {
+    // This will print the structure to the console:
+    console.log(req.body);
+    console.log(req.files);
+    // We need to rename the file to the name of the file from the
+    // client system:
+    var song = req.files.song;
+    var fname = song.name;
+    fs.rename(song.path, './public/music/' + fname, function () { res.redirect('/home'); });
+};
+
+exports.image_upload = function (req, res, next) {
+    var username = req.session.username;
+    // This will print the structure to the console:
+    console.log(req.body);
+    console.log(req.files);
+    // We need to rename the file to the name of the file from the
+    // client system:
+    var image = req.files.image;
+    image.name = username + '.jpg';
+    fs.rename(image.path, './public/profile_images/' + image.name, function () { res.redirect('/home');});
+};

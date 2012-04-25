@@ -43,21 +43,7 @@ var set_msg = function () {
 	});
 };
 
-var check_host = function(){
-		var req = $.ajax({
-		type: 'POST',
-		url : '/hasHost',
-		data: {'roomname' : roomname }
-	});
-	req.done(function (data) {
-		if(data.hosted == false)
-			window.location = "http://elnux7.cs.umass.edu:8888/home"
-	});
-}
-
-var pollEverything = function(){
-	if($('#launch').is(":hidden"))
-		check_host();
+var pollMessage = function(){
 	get_msg();
 	get_usrs();
 };
@@ -65,7 +51,7 @@ var pollEverything = function(){
 var msg_interval_id;
 
 var start_polling_msg = function () {
-	msg_interval_id = setInterval(pollEverything, 3000);
+	msg_interval_id = setInterval(pollMessage, 3000);
 };
 
 var stop_polling_msg = function () {

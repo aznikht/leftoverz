@@ -1,33 +1,54 @@
 <!-- Homepage View -->
-<div id="container">
-<h1>Home of Leftoverz Project</h1>
-<p>Welcome <%= user %></p>
-<div id="listcontainer">
-<table id="chatrooms">
-<tr>
-<td>Music Room</td>
-<td>Host</td>
-<td># of Guests</td>
-</tr>
-<% for(var i=0; i<chatrooms.length; i++){
-var room = chatrooms[i];%>
-<tr>
-<td><a href='/chatroom/<%=room.chatroom_name%>'> <%=room.chatroom_name%> </a></td>
-<td><%= room.host_name %></td>
-<td>#</td>
-</tr>
-<% } %>
-</table>
+<div id='maintitle'>
+	<h1>Home of Leftoverz Project</h1>
 </div>
-</br>
-<div id="createRoom">
-<form name="createRoom" action="/hostroom" method="POST" accept-charset="utf-8" onsubmit="return validateRoom();">
-<p> Music Room Name: <input type="text" name="roomname"></p>
-<p><input type="submit" value="Create Music Room"></p>
-</form>
-</div>
-<div id="jsError"></div>
-</div>
+	<div id='user'>
+		<h3>Welcome <%= user %></h3>
+		<img id='profile' src='/profile_images/<%= user %>.jpg' alt='Upload Your Profile Image'></img>
+		<div id='uploadpic'>
+			<form method="post" enctype="multipart/form-data" action="/image-upload">
+			<h3> Upload A Profile Picture </h3>
+			      <p><input type="file" name="image" /></p>
+			      <p><input type="submit" value="Upload" /></p>
+			</form>
+		</div>
+	</div>
+	<div id="musicrooms">
+		<div id='musictable'>
+		<h2> Music Rooms </h2>
+			<table id="chatrooms">
+				<tr>
+					<td><b>Music Room</b></td><td><b>Host</b></td>
+				</tr>
+				<% for(var i=0; i<chatrooms.length; i++){
+				var room = chatrooms[i];%>
+				<tr>
+				<td><a href='/chatroom/<%=room.chatroom_name%>'> <%=room.chatroom_name%> </a></td>
+				<td><%= room.host_name %></td>
+				</tr>
+				<% } %>
+			</table>
+		</div>
+		<div id='functions'>
+			<div id="createroom">
+				<form name="createRoom" action="/hostroom" method="POST" accept-charset="utf-8" onsubmit="return validateRoom();">
+				<h3> Create A Music Room </h3>
+				<p> Name: <input type="text" name="roomname"></p>
+				<p><input type="submit" value="Create Music Room"></p>
+				</form>
+				<div id="jsError"></div>
+			</div>
+			<div id='uploadsong'>
+				<form method="post" enctype="multipart/form-data" action="/song-upload">
+			      <h3> Upload a Song</h3>
+			      <p><input type="file" name="song" /></p>
+			      <p><input type="submit" value="Upload" /></p>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
 <div id="logout">
 <form action="/logout">
     <input type="Submit" value="Logout">

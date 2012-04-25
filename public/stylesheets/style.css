@@ -1,10 +1,17 @@
 body {
-  padding: 50px;
-  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding-left: 75px;
+  padding-right: 75px;
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   text-align: center;
-  background-image:url('equalizer.jpg');
+  background-image:url('equalizer.png');
   background-repeat:repeat-x;
   background-position:bottom;
+}
+
+#profile
+{
+	width: 275px;
+	height: 250px;
 }
 
 a {
@@ -24,10 +31,7 @@ div#users {
 }
 
 table {
-  float:left;
   vertical-align: middle;
-  border:2px solid gray;
-  padding:5px;
 }
 
 div#container{
@@ -48,29 +52,41 @@ div#logout{
   }
 
 div#listcontainer{
-  width: 450px;
+  width: 100%;
   height: auto;
 }
 
-div#songlistTable{
-  width: 49%;
-  height: 300px;
-  float: left;
+div#library{
+  width: 48%;
+  height: 200px;
+  float:left;
+  font-size: 11px;
   overflow-y: auto;
   border: thin solid gray;
 }
 
-div#playlistTable{
-  width: 49%;
-  height:300px;
+#playlisttable
+{
+	width: 100%;
+}
+
+#songlist
+{
+	width: 100%;
+}
+
+div#playlist{
+  width: 48%;
+  height:200px;
   float: right;
+  font-size: 11px;
   overflow-y: auto;
   border: thin solid gray;
 }
 
 div#chat{
   float:left;
-  width: 600px;
+  width: 69%;
   height: 300px;
   overflow-y:auto;
   border: thin solid gray;
@@ -79,7 +95,7 @@ div#chat{
 
 div#users{
   float: right;
-  width: 168px;
+  width: 29%;
   height: 290px;
   overflow-y:auto;
   border:thin solid gray;
@@ -88,7 +104,7 @@ div#users{
 }
 
 textarea#msg{
-  width: 777px;
+  width: 99%;
   height: 75px;
   border: thin solid gray;
   resize: none;
@@ -116,5 +132,83 @@ div#currentSong
 {
 	font-size: 18px;
 }
+
+div#musicrooms
+{
+  background-color: #1B676B;
+  width: 700px;
+  height:500px;
+  opacity:0.75;
+}
+
+div#musictable
+{
+	float: left;
+	width: 65%;
+	height: 490px;
+	
+}
+
+tr, td
+{
+	border-bottom: 1px solid black;
+	background-color: #D1E751;
+}
+
+#chatrooms
+{
+	width: 100%;
+}
+
+div#createroom
+{
+	padding: 20px;
+	float: right;
+	width:99%;
+}
+
+div#user
+{
+	float: right;
+	width: 450px;
+	height:500px;
+	background-color: #3B5998;
+	opacity:0.75;
+}
+
+div#uploadsong
+{
+	padding: 20px;
+	float: right;
+	width:99%;
+}
+
+div#functions
+{
+	padding-top: 25px;
+	float: right;
+	width: 29%;
+	height: 500px;
+}
+
+div#uploadpic
+{
+	padding: 5px;
+
+}
+
+div#maintitle
+{
+	
+}
+
+div#musictitle
+{
+	
+}
+
+
+
+
 
 

@@ -29,7 +29,10 @@ var check_host = function(){
 	});
 	req.done(function (data) {
 		if(data.hosted == false)
-			window.location = "http://elnux7.cs.umass.edu:8888/home"
+		{
+			alert("Host has left and Room has closed!");
+			window.location = "http://elnux7.cs.umass.edu:8888/home";
+		}
 	});
 }
 

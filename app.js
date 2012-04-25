@@ -11,12 +11,13 @@ var app = module.exports = express.createServer();
 app.configure(function(){
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
-    app.use(express.bodyParser());
+    app.use(express.bodyParser({uploadDir: './public'}));
     app.use(express.methodOverride());
     app.use(express.cookieParser());
     app.use(express.session({ secret: 'cs391wp' }));
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
+    
 });
 
 app.configure('development', function(){
@@ -49,6 +50,8 @@ app.get('/get-usrs', routes.get_usrs);
 app.post('/set-msg', routes.set_msg);
 app.post('/set-song', routes.set_song);
 app.post('/isRoomExist', routes.isRoomExist);
+app.post('/song-upload', routes.song_upload);
+app.post('/image-upload', routes.image_upload);
 
 
 app.listen(8888);

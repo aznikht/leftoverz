@@ -12,7 +12,7 @@ function selectSong(elem)
 
 	var id = $(elem).attr('id');
 	var song = $(elem).attr('value');
-	var table = document.getElementById('playlist');
+	var table = document.getElementById('playlisttable');
 	var rowCount = table.rows.length;
 	var row = table.insertRow(rowCount);
 	var content = row.insertCell(0);
@@ -24,7 +24,7 @@ function selectSong(elem)
 
 function updatePlaylist()
 {
-	var table = document.getElementById('playlist');
+	var table = document.getElementById('playlisttable');
 	var rowNum = table.rows.length;
 	arraySongs.length = 0;
 	for(var i = 0; i < rowNum; i++)
@@ -44,7 +44,7 @@ function setCurrentSong()
 
 function validateLaunch()
 {
-	var table = document.getElementById('playlist');
+	var table = document.getElementById('playlisttable');
 	var rowNum = table.rows.length;
 	if(rowNum == 0)
 	{
@@ -83,7 +83,7 @@ var set_song = function() {
 
 var get_next = function(){
 	setCurrentSong();
-	var table = document.getElementById('playlist');
+	var table = document.getElementById('playlisttable');
 	if(currentSong != '')
 	{
 		table.deleteRow(0);
