@@ -3,7 +3,7 @@ body {
   padding-right: 75px;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   text-align: center;
-  background-image:url('equalizer.png');
+  background-image:url('equalizer.jpg');
   background-repeat:repeat-x;
   background-position:bottom;
 }
@@ -95,7 +95,7 @@ div#chat{
 
 div#users{
   float: right;
-  width: 29%;
+  width: 28%;
   height: 290px;
   overflow-y:auto;
   border:thin solid gray;
